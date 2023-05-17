@@ -1,0 +1,119 @@
+@import 'reset.scss';
+
+$bg: #fff;
+$sizeTitle: 20px;
+$hoverBg: blue;
+$hoverColor: yellow;
+$interval: 0.2s;
+
+@mixin button($bg: grey, $wid: 100px, $ht: 30px) {
+	display: block;
+	width: $wid;
+	height: $ht;
+	background: $bg;
+	border-radius: 15px;
+	text-align: center;
+	color: #fff;
+	font-size: 15px;
+	line-height: 36px;
+	margin-top: 15px;
+}
+
+$titColors: (
+	1: blue,
+	2: hotpink,
+	3: lightBlue,
+	4: violet,
+);
+
+body {
+	background: #efefef;
+
+	.wrap {
+		width: 100%;
+		border: 1px solid #ddd;
+		padding: 100px;
+
+		&::after {
+			content: '';
+			display: block;
+			clear: both;
+		}
+
+		.item {
+			width: 300px;
+			padding: 20px;
+			margin: 20px;
+			background: $bg;
+			float: left;
+			border-radius: 10px;
+			box-shadow: 5px 5px 20px #ddd;
+			transform: translateY(200px);
+			opacity: 0;
+			transition-property: opacity transform;
+			transition-duration: 1s;
+
+			//scss 에서 반복문처리시 {}안쪽에서는 변수로 바로 치환가능하나
+			//선택자에서는 #{}로 감싸야지 연산이 가능
+			@for $i from 0 through 3 {
+				&:nth-of-type(#{1 + $i}) {
+					transition-delay: $interval * $i;
+				}
+			}
+			//each문을 활용해서 규칙성이 없는 값들을 반봅처리
+			@each $key, $value in $titColors {
+				&:nth-of-type(#{$key}) {
+					h2 {
+						color: $value;
+					}
+				}
+			}
+
+			// &:nth-of-type(1 + 0) {
+			// 	transition-delay: 0s * 0;
+			// }
+			// &:nth-of-type(1 + 1) {
+			// 	transition-delay: 0.2s * 1;
+			// }
+			// &:nth-of-type(1 + 2) {
+			// 	transition-delay: 0.2s * 2;
+			// }
+			// &:nth-of-type(1 + 3) {
+			// 	transition-delay: 0.2s * 3;
+			// }
+
+			h2 {
+				font-size: $sizeTitle;
+				font-family: 'arial';
+				//color: $colorTit;
+				margin-bottom: 15px;
+			}
+
+			// &:nth-of-type(odd) {
+			// 	a {
+			// 		@include button($bg: hotpink, $ht: 50px);
+			// 	}
+			// }
+			// &:nth-of-type(even) {
+			// 	a {
+			// 		@include button($wid: 150px);
+			// 	}
+			// }
+		}
+		.item:hover {
+			background: $hoverBg;
+			color: #fff;
+
+			h2,
+			a,
+			p {
+				color: $hoverColor;
+			}
+		}
+		//activation style
+		.item.on {
+			transform: translateY(0px);
+			opacity: 1;
+		}
+	}
+}
